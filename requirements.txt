@@ -6,7 +6,3 @@ Pillow>=10.0.0
 
 # Ollama Python client (optional — app also uses raw HTTP via urllib)
 # ollama>=0.1.8
-
-# Linting and testing
-pytest>=8.0.0
-pytest-cov>=5.0.0

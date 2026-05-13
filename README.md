@@ -29,7 +29,15 @@ Stoic philosopher and author of the *Letters to Lucilius*.
 ### 1 — Install dependencies
 
 ```bash
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+For development + tests:
+
+```bash
+pip install -e ".[dev]"
 ```
 
 ### 2 — Start a local LLM with Ollama (recommended — 100 % free)
@@ -112,6 +120,7 @@ print(seneca.consciousness_report())
 ## 🧪 Running Tests
 
 ```bash
+pip install -e ".[dev]"
 pytest tests/ -v
 ```
 

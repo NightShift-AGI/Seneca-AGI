@@ -146,7 +146,7 @@ with st.sidebar:
         disabled=not persist_messages,
     )
 
-    if st.button("♻️ Apply Settings"):
+    if st.button("♻️ Apply & Reload Session"):
         resolved_memory_path = None
         if persist_messages:
             resolved_memory_path = memory_path.strip() or _default_memory_path()

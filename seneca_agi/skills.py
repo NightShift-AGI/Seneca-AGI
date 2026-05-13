@@ -10,6 +10,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable, List, Optional
 
+TOPIC_PLACEHOLDER = "{topic}"
+
 
 @dataclass(frozen=True)
 class Skill:
@@ -25,7 +27,7 @@ class Skill:
         if self.requires_input and not user_input:
             raise ValueError(f"Skill '{self.name}' requires input.")
         prompt = self.prompt
-        if "{topic}" in prompt:
+        if TOPIC_PLACEHOLDER in prompt:
             prompt = prompt.format(topic=(user_input or "").strip())
         prompt = prompt.strip()
         if self.include_memory_summary and memory_summary:
@@ -34,7 +36,16 @@ class Skill:
 
 
 def format_skill_invocation(skill: Skill, user_input: Optional[str]) -> str:
-    """Format the visible user message for a skill invocation."""
+    """
+    Format the visible user message for a skill invocation.
+
+    Parameters
+    ----------
+    skill:
+        The skill being invoked.
+    user_input:
+        Optional user-provided context for the skill.
+    """
     label = f"[Skill: {skill.name}]"
     if user_input:
         label = f"{label} {user_input.strip()}"
@@ -62,7 +73,7 @@ def default_skills() -> List[Skill]:
             description="Ask clarifying Stoic questions about a situation.",
             prompt=(
                 "Ask 3–5 concise Stoic questions that help someone reflect on:"
-                " \"{topic}\". Keep each question brief and practical."
+                f" \"{TOPIC_PLACEHOLDER}\". Keep each question brief and practical."
             ),
             requires_input=True,
         ),
@@ -71,7 +82,7 @@ def default_skills() -> List[Skill]:
             description="Suggest a Stoic exercise for today.",
             prompt=(
                 "Offer a small Stoic exercise for the next 24 hours, grounded in:"
-                " \"{topic}\". Make it concrete and doable."
+                f" \"{TOPIC_PLACEHOLDER}\". Make it concrete and doable."
             ),
             requires_input=True,
         ),

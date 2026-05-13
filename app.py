@@ -67,13 +67,14 @@ def _default_memory_path() -> str:
 
 
 def _hydrate_chat_history(memory: ConversationMemory) -> list[tuple[str, str, Optional[bytes]]]:
+    """Restore chat history from persisted memory for display."""
     history: list[tuple[str, str, Optional[bytes]]] = []
     for message in memory.get_messages():
         if message.role == "system":
             continue
         text = message.content
         if message.has_image:
-            text = f"{text}\n\n*(Image attached in a previous session.)*"
+            text = f"{text}\n\n{IMAGE_PLACEHOLDER_NOTE}"
         history.append((message.role, text, None))
     return history
 
@@ -146,7 +147,7 @@ with st.sidebar:
         disabled=not persist_messages,
     )
 
-    if st.button("♻️ Apply & Reload Session"):
+    if st.button("♻️ Apply & Reload/Reset Session"):
         resolved_memory_path = None
         if persist_messages:
             resolved_memory_path = memory_path.strip() or _default_memory_path()
@@ -314,3 +315,5 @@ st.markdown(
     "</div>",
     unsafe_allow_html=True,
 )
+# Shared UI strings
+IMAGE_PLACEHOLDER_NOTE = "*(Image attached in a previous session.)*"

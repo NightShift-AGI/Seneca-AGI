@@ -1,5 +1,9 @@
 # 🏛️ Seneca AGI
 
+<p align="center">
+  <img src="website/assets/logo.svg" alt="Seneca AGI abstract logo" width="160" />
+</p>
+
 > *"Recede in te ipse quantum potes."*
 > *Withdraw into yourself as much as you can.*
 > — Seneca, *Letters to Lucilius* VII
@@ -21,6 +25,14 @@ Stoic philosopher and author of the *Letters to Lucilius*.
 | 📚 **Memory** | Rolling conversation window + optional persistent memory |
 | 🧰 **Skills** | Focused prompt modes (Socratic questions, daily practice, etc.) |
 | 🆓 **Completely free** | Runs locally via [Ollama](https://ollama.com) — no API key required |
+
+---
+
+## 🌐 Website
+
+The static marketing site lives in [`website/`](website/). Open
+[`website/index.html`](website/index.html) locally, or deploy the folder with
+any static hosting (GitHub Pages, Netlify, Cloudflare Pages, etc.).
 
 ---
 
@@ -55,6 +67,21 @@ streamlit run app.py
 ```
 
 Open <http://localhost:8501> in your browser.
+
+---
+
+## 🖥️ Desktop Bundles (Windows · macOS · Linux)
+
+Seneca AGI includes a desktop launcher and PyInstaller build script. **Build
+bundles on each target OS**.
+
+```bash
+pip install -e ".[bundle]"
+python packaging/build.py
+```
+
+Run the generated binary from `dist/` (or execute `seneca-agi-desktop` directly
+from source to launch the local Streamlit UI).
 
 ---
 

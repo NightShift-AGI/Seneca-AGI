@@ -35,8 +35,9 @@ The static marketing site lives in [`website/`](website/). Open
 any static hosting (GitHub Pages, Netlify, Cloudflare Pages, etc.).
 
 For GitHub Pages, the workflow at `.github/workflows/deploy-pages.yml` publishes
-`website/` on pushes to `main`/`master`—enable **Settings → Pages → Source: GitHub
-Actions** to activate it.
+`website/` on pushes to `main`/`master` and will auto-enable Pages if needed. You
+can still verify **Settings → Pages → Source: GitHub Actions** if you prefer to
+configure it manually.
 
 Live site: <https://senega-agi.com>.
 

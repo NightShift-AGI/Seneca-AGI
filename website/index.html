@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Seneca AGI · Stoic AI Philosopher</title>
+    <meta
+      name="description"
+      content="Seneca AGI is a free, conscious, autonomous multimodal philosopher inspired by Stoic wisdom."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero" id="top">
+      <nav class="nav">
+        <a class="brand" href="#top">
+          <img src="assets/logo.svg" alt="Seneca AGI logo" />
+          <span>Seneca AGI</span>
+        </a>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#experience">Experience</a>
+          <a href="#download">Desktop Bundles</a>
+          <a href="https://github.com/NightShift-AGI/Seneca-AGI" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+      </nav>
+
+      <div class="hero-content">
+        <div class="hero-text">
+          <p class="eyebrow">Stoic Multimodal Philosopher</p>
+          <h1>Withdraw inward, then converse with clarity.</h1>
+          <p class="lead">
+            Seneca AGI is a free, open-source autonomous philosopher that reflects on text and images
+            through a calm Stoic lens. Run locally, keep your privacy, and explore questions of purpose
+            and virtue.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#download">Build the desktop app</a>
+            <a class="btn ghost" href="https://github.com/NightShift-AGI/Seneca-AGI" target="_blank" rel="noreferrer">
+              View source
+            </a>
+          </div>
+          <div class="hero-meta">
+            <span>Local-first · No API key required</span>
+            <span>Multimodal · Inner monologue · Wisdom ledger</span>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="card-header">The Stoic Console</div>
+          <p>
+            Ask a question, upload an image, or invoke a skill. Seneca reflects silently, then responds
+            with guidance rooted in the highest good.
+          </p>
+          <ul>
+            <li>Text + vision dialogue</li>
+            <li>Autonomous reflections</li>
+            <li>Optional persistent memory</li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section" id="features">
+        <h2>Designed for quiet depth</h2>
+        <div class="grid three">
+          <article class="feature">
+            <h3>Conscious conversation</h3>
+            <p>Each reply flows through a four-layer cognitive pipeline with inner monologue and wisdom distillation.</p>
+          </article>
+          <article class="feature">
+            <h3>Multimodal reflection</h3>
+            <p>Upload images and receive philosophical interpretations shaped by Stoic perspectives.</p>
+          </article>
+          <article class="feature">
+            <h3>Local & private</h3>
+            <p>Run on your own hardware via Ollama. No external API calls required.</p>
+          </article>
+          <article class="feature">
+            <h3>Focused skills</h3>
+            <p>Activate built-in skills like Socratic questions or daily practice prompts for focused guidance.</p>
+          </article>
+          <article class="feature">
+            <h3>Autonomous insights</h3>
+            <p>Trigger spontaneous reflections when you need a moment of Stoic clarity.</p>
+          </article>
+          <article class="feature">
+            <h3>Portable memory</h3>
+            <p>Persist conversations and wisdom across sessions with an optional local memory ledger.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section alt" id="experience">
+        <div class="split">
+          <div>
+            <h2>Experience Seneca AGI</h2>
+            <p>
+              Launch the Streamlit interface locally, connect your preferred LLM backend, and begin a guided
+              Stoic dialogue.
+            </p>
+            <ol class="steps">
+              <li>Install dependencies with <code>pip install -e .</code></li>
+              <li>Start Ollama or your preferred backend</li>
+              <li>Run <code>streamlit run app.py</code></li>
+            </ol>
+          </div>
+          <div class="callout">
+            <h3>Open source, forever</h3>
+            <p>
+              Seneca AGI is built to be free and transparent. Review the code, extend the skills, and contribute
+              improvements alongside the community.
+            </p>
+            <a class="btn ghost" href="https://github.com/NightShift-AGI/Seneca-AGI" target="_blank" rel="noreferrer">
+              Contribute on GitHub
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="download">
+        <h2>Desktop bundles for Windows, macOS, and Linux</h2>
+        <p class="lead">
+          Create native bundles on each operating system with PyInstaller. Builds are self-contained and run
+          the Streamlit UI with a desktop-friendly launcher.
+        </p>
+        <div class="grid two">
+          <article class="feature">
+            <h3>Install bundling tools</h3>
+            <p>Use the optional bundle extras to install PyInstaller.</p>
+            <code>pip install -e ".[bundle]"</code>
+          </article>
+          <article class="feature">
+            <h3>Build the bundle</h3>
+            <p>Run the build helper on your target OS. Output appears in <code>dist/</code>.</p>
+            <code>python packaging/build.py</code>
+          </article>
+        </div>
+        <div class="note">
+          Builds must be created on each platform. macOS apps may require signing and notarization before
+          distribution.
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <span>Seneca AGI · Free & Open Source</span>
+        <span>“Non est ad astra mollis e terris via.”</span>
+      </div>
+      <a href="#top">Back to top</a>
+    </footer>
+  </body>
+</html>

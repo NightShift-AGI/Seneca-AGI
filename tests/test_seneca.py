@@ -30,7 +30,7 @@ from seneca_agi.philosopher import SenecaPhilosopher
 
 @pytest.fixture()
 def default_config() -> SenecaConfig:
-    return SenecaConfig(backend=Backend.OLLAMA, text_model="llama3.2")
+    return SenecaConfig(backend=Backend.OLLAMA, text_model="llama3.1:70b")
 
 
 @pytest.fixture()
@@ -52,10 +52,10 @@ class TestSenecaConfig:
         assert default_config.backend == Backend.OLLAMA
 
     def test_default_text_model(self, default_config: SenecaConfig) -> None:
-        assert default_config.text_model == "llama3.2"
+        assert default_config.text_model == "llama3.1:70b"
 
     def test_resolve_text_model_groq_alias(self) -> None:
-        cfg = SenecaConfig(backend=Backend.GROQ, text_model="llama3.2")
+        cfg = SenecaConfig(backend=Backend.GROQ, text_model="llama3.1:70b")
         assert cfg.resolve_text_model() == cfg.GROQ_TEXT_MODEL
 
     def test_resolve_text_model_custom_unchanged(self) -> None:

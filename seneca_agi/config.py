@@ -110,7 +110,7 @@ class SenecaConfig:
         if self.backend == Backend.GROQ and self.text_model.startswith("llama3.1"):
             if ":8b" in self.text_model:
                 return "llama3-8b-8192"
-            if ":70b" in self.text_model or self.text_model == "llama3.1":
+            elif ":70b" in self.text_model or self.text_model == "llama3.1":
                 return self.GROQ_TEXT_MODEL
         return self.text_model
 

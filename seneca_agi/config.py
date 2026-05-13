@@ -11,6 +11,7 @@ Priority order for free accessibility:
 from __future__ import annotations
 
 import os
+from pathlib import Path
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
@@ -79,6 +80,14 @@ class SenecaConfig:
     # Number of past messages kept in context
     context_window: int = int(os.getenv("SENECA_CONTEXT_WINDOW", "20"))
 
+    # ------------------------------------------------------ memory persistence
+    memory_path: Optional[str] = field(
+        default_factory=lambda: os.getenv("SENECA_MEMORY_PATH")
+    )
+    persist_messages: bool = (
+        os.getenv("SENECA_PERSIST_MESSAGES", "false").lower() == "true"
+    )
+
     # ------------------------------------------------------- consciousness
     # Whether to run the inner-monologue / self-reflection loop
     enable_consciousness: bool = (
@@ -111,3 +120,11 @@ class SenecaConfig:
     def supports_vision(self) -> bool:
         """Return True when the current backend can process images."""
         return self.backend in (Backend.OLLAMA, Backend.GROQ, Backend.OPENAI, Backend.CUSTOM)
+
+    def resolve_memory_path(self) -> Optional[Path]:
+        """Return the configured memory path, falling back to a default when enabled."""
+        if self.memory_path:
+            return Path(self.memory_path)
+        if self.persist_messages:
+            return Path.home() / ".seneca_agi" / "memory.json"
+        return None

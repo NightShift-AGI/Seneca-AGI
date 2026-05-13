@@ -23,6 +23,7 @@ from typing import Generator, List, Optional, Union
 from seneca_agi.config import Backend, SenecaConfig
 from seneca_agi.memory import ConversationMemory
 from seneca_agi.multimodal import build_vision_content, is_pil_available
+from seneca_agi.skills import Skill, SkillRegistry, default_skills, format_skill_invocation
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Seneca's core identity — injected as the system message
@@ -131,13 +132,18 @@ class SenecaPhilosopher:
         self,
         config: Optional[SenecaConfig] = None,
         memory: Optional[ConversationMemory] = None,
+        skills: Optional[SkillRegistry] = None,
     ) -> None:
         self.config = config or SenecaConfig()
         self.memory = memory or ConversationMemory(
             max_messages=self.config.context_window,
+            persistence_path=self.config.resolve_memory_path(),
+            persist_messages=self.config.persist_messages,
         )
-        # Seed the system message
-        self.memory.add_message("system", _SYSTEM_PROMPT)
+        self.skills = skills or SkillRegistry(default_skills())
+        # Seed the system message if needed
+        if not any(m.role == "system" for m in self.memory.get_messages()):
+            self.memory.add_message("system", _SYSTEM_PROMPT)
 
     # ─────────────────────────────────────────────────────── public interface
 
@@ -211,6 +217,37 @@ class SenecaPhilosopher:
         """Clear conversation history, keeping the system prompt and wisdom."""
         self.memory.clear_messages()
         self.memory.add_message("system", _SYSTEM_PROMPT)
+
+    def list_skills(self) -> List[Skill]:
+        """Return available skills."""
+        return self.skills.list()
+
+    def use_skill(self, name: str, user_input: Optional[str] = None) -> str:
+        """
+        Invoke a named skill, optionally with user input.
+
+        The skill is recorded in memory as a tagged user message.
+        """
+        skill = self.skills.get(name)
+        if not skill:
+            raise ValueError(f"Unknown skill: {name}")
+
+        prompt = skill.build_prompt(
+            user_input=user_input,
+            memory_summary=self.memory.wisdom_summary(limit=5),
+        )
+        label = format_skill_invocation(skill, user_input)
+
+        inner_context = ""
+        if self.config.enable_consciousness:
+            inner_context = self._inner_monologue(user_input or skill.name)
+
+        self.memory.add_message("user", label)
+        messages = self._build_messages(inner_context, prompt, has_image=False)
+        reply = self._call_backend(messages, has_image=False)
+        self.memory.add_message("assistant", reply)
+        self._distil_wisdom(user_input or skill.name, reply)
+        return reply
 
     # ───────────────────────────────────────────────── consciousness helpers
 

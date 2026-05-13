@@ -83,6 +83,10 @@ class TestSenecaConfig:
         assert Backend.OPENAI.value == "openai"
         assert Backend.CUSTOM.value == "custom"
 
+    def test_resolve_memory_path_defaults_when_enabled(self) -> None:
+        cfg = SenecaConfig(persist_messages=True, memory_path=None)
+        assert cfg.resolve_memory_path() is not None
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # ConversationMemory tests
@@ -158,6 +162,18 @@ class TestConversationMemory:
         mem1.add_wisdom("Death is not to be feared.")
         mem2 = ConversationMemory(persistence_path=path)
         assert any("Death" in e.text for e in mem2.get_wisdom())
+
+    def test_persistence_includes_messages(self, tmp_path: Path) -> None:
+        path = tmp_path / "memory.json"
+        mem1 = ConversationMemory(persistence_path=path, persist_messages=True)
+        mem1.add_message("user", "Remember this.", has_image=True)
+        mem1.add_wisdom("What is remembered is not lost.")
+
+        mem2 = ConversationMemory(persistence_path=path, persist_messages=True)
+        msgs = mem2.get_messages()
+        assert len(msgs) == 1
+        assert msgs[0].content == "Remember this."
+        assert msgs[0].has_image is True
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -374,6 +390,14 @@ class TestSenecaPhilosopher:
         # When consciousness is disabled, no inner-monologue system message injected
         system_msgs = [m for m in msgs if m["role"] == "system" and "Inner reflection" in m["content"]]
         assert len(system_msgs) == 0
+
+    def test_use_skill_records_exchange(self, philosopher: SenecaPhilosopher) -> None:
+        with patch.object(philosopher, "_call_backend", return_value=MOCK_REPLY):
+            reply = philosopher.use_skill("socratic-questions", user_input="test skill")
+        assert reply == MOCK_REPLY
+        roles = [m.role for m in philosopher.memory.get_messages()]
+        assert "user" in roles
+        assert "assistant" in roles
 
     def test_distil_wisdom_extracts_quoted_sentence(
         self, philosopher: SenecaPhilosopher

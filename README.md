@@ -18,7 +18,8 @@ Stoic philosopher and author of the *Letters to Lucilius*.
 | 🖼️ **Multimodal** | Analyses images through a philosophical lens |
 | 🧠 **Consciousness** | Inner-monologue loop — Seneca silently reflects before replying |
 | 🔄 **Autonomous** | Spontaneous reflections; self-directed wisdom generation |
-| 📚 **Memory** | Rolling conversation window + persistent wisdom ledger |
+| 📚 **Memory** | Rolling conversation window + optional persistent memory |
+| 🧰 **Skills** | Focused prompt modes (Socratic questions, daily practice, etc.) |
 | 🆓 **Completely free** | Runs locally via [Ollama](https://ollama.com) — no API key required |
 
 ---
@@ -64,6 +65,8 @@ inside the app.
 | `OPENAI_API_KEY` | *(none)* | OpenAI API key |
 | `SENECA_TEMPERATURE` | `0.75` | Generation temperature (0–1) |
 | `SENECA_CONSCIOUSNESS` | `true` | Enable inner-monologue loop |
+| `SENECA_MEMORY_PATH` | *(none)* | Path to a local memory JSON file |
+| `SENECA_PERSIST_MESSAGES` | `false` | Persist conversation + wisdom across sessions |
 
 ### Using the free Groq cloud tier
 
@@ -95,6 +98,10 @@ print(reply)
 # Spontaneous autonomous reflection
 insight = seneca.reflect()
 print(insight)
+
+# Use a built-in skill
+reply = seneca.use_skill("socratic-questions", user_input="I'm anxious about change.")
+print(reply)
 
 # Consciousness status
 print(seneca.consciousness_report())

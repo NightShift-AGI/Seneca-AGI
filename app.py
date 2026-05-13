@@ -14,6 +14,8 @@ Environment variables (all optional):
     SENECA_API_KEY        generic key for custom backends
     SENECA_API_BASE_URL   custom OpenAI-compatible base URL
     SENECA_TEMPERATURE    0.0 – 1.0                        (default: 0.75)
+    SENECA_MEMORY_PATH    path to memory JSON file
+    SENECA_PERSIST_MESSAGES true | false                   (default: false)
 """
 
 from __future__ import annotations
@@ -28,6 +30,7 @@ from seneca_agi.config import Backend, SenecaConfig
 from seneca_agi.memory import ConversationMemory
 from seneca_agi.multimodal import is_pil_available
 from seneca_agi.philosopher import SenecaPhilosopher
+from seneca_agi.skills import format_skill_invocation
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Page configuration
@@ -48,13 +51,31 @@ def _init_session() -> None:
     if "philosopher" not in st.session_state:
         cfg = _build_config_from_sidebar_defaults()
         st.session_state.philosopher = SenecaPhilosopher(config=cfg)
-        st.session_state.chat_history = []  # list of (role, text, image_bytes?)
+        st.session_state.chat_history = _hydrate_chat_history(
+            st.session_state.philosopher.memory
+        )
         st.session_state.config = cfg
 
 
 def _build_config_from_sidebar_defaults() -> SenecaConfig:
     """Build a SenecaConfig, respecting env vars for server-side defaults."""
     return SenecaConfig()
+
+
+def _default_memory_path() -> str:
+    return str(Path.home() / ".seneca_agi" / "memory.json")
+
+
+def _hydrate_chat_history(memory: ConversationMemory) -> list[tuple[str, str, Optional[bytes]]]:
+    history: list[tuple[str, str, Optional[bytes]]] = []
+    for message in memory.get_messages():
+        if message.role == "system":
+            continue
+        text = message.content
+        if message.has_image:
+            text = f"{text}\n\n*(Image attached in a previous session.)*"
+        history.append((message.role, text, None))
+    return history
 
 
 _init_session()
@@ -112,7 +133,23 @@ with st.sidebar:
         ),
     )
 
+    persist_messages = st.toggle(
+        "Persistent memory",
+        value=st.session_state.config.persist_messages,
+        help="Store conversation + wisdom locally and resume on next launch.",
+    )
+
+    memory_path = st.text_input(
+        "Memory file path",
+        value=st.session_state.config.memory_path or _default_memory_path(),
+        help="Local JSON file used to store persistent memory.",
+        disabled=not persist_messages,
+    )
+
     if st.button("♻️ Apply & Reset Conversation"):
+        memory_path_value = None
+        if persist_messages:
+            memory_path_value = memory_path.strip() or _default_memory_path()
         new_cfg = SenecaConfig(
             backend=Backend(backend_choice),
             text_model=text_model,
@@ -120,9 +157,12 @@ with st.sidebar:
             api_key=api_key or None,
             temperature=temperature,
             enable_consciousness=consciousness,
+            persist_messages=persist_messages,
+            memory_path=memory_path_value,
         )
         st.session_state.config = new_cfg
         st.session_state.philosopher = SenecaPhilosopher(config=new_cfg)
+        st.session_state.philosopher.reset()
         st.session_state.chat_history = []
         st.rerun()
 
@@ -137,6 +177,38 @@ with st.sidebar:
     if st.button("📋 Consciousness Report"):
         report = st.session_state.philosopher.consciousness_report()
         st.info(report)
+
+    st.divider()
+    st.subheader("🧰 Skills")
+
+    skill_options = [skill.name for skill in st.session_state.philosopher.list_skills()]
+    skill_choice = st.selectbox(
+        "Choose a skill",
+        options=skill_options,
+        help="Skills are focused prompt templates (e.g., Socratic questions).",
+    )
+    skill_input = st.text_area(
+        "Skill input (optional)",
+        value="",
+        placeholder="Describe a situation or topic for the skill to act on...",
+    )
+
+    if st.button("▶️ Run Skill"):
+        skill = st.session_state.philosopher.skills.get(skill_choice)
+        if skill and skill.requires_input and not skill_input.strip():
+            st.warning("This skill needs input. Add a short description and try again.")
+        elif not skill:
+            st.error("Selected skill is unavailable.")
+        else:
+            with st.spinner("Seneca applies the skill…"):
+                reply = st.session_state.philosopher.use_skill(
+                    skill_choice,
+                    user_input=skill_input or None,
+                )
+            label = format_skill_invocation(skill, skill_input or None)
+            st.session_state.chat_history.append(("user", label, None))
+            st.session_state.chat_history.append(("assistant", reply, None))
+            st.rerun()
 
     st.divider()
 

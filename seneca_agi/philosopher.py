@@ -143,8 +143,14 @@ class SenecaPhilosopher:
         self.skills = skills or SkillRegistry(default_skills())
         # Seed the system message if needed
         existing_messages = self.memory.get_messages()
-        if not existing_messages or existing_messages[0].role != "system":
+        if not existing_messages:
             self.memory.add_message("system", _SYSTEM_PROMPT)
+        elif existing_messages[0].role != "system":
+            preserved = [m for m in existing_messages if m.role != "system"]
+            self.memory.clear_messages()
+            self.memory.add_message("system", _SYSTEM_PROMPT)
+            for msg in preserved:
+                self.memory.add_message(msg.role, msg.content, has_image=msg.has_image)
 
     # ─────────────────────────────────────────────────────── public interface
 

@@ -141,6 +141,11 @@ class ConversationMemory:
         if self._persist_messages:
             data["messages"] = [m.to_dict() for m in self._messages]
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        try:
+            if path.parent.name == ".seneca_agi":
+                path.parent.chmod(0o700)
+        except OSError:
+            pass
         path.write_text(json.dumps(data, indent=2), encoding="utf-8")
         try:
             path.chmod(0o600)

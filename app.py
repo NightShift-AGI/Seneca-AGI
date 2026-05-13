@@ -32,7 +32,6 @@ from seneca_agi.multimodal import is_pil_available
 from seneca_agi.philosopher import SenecaPhilosopher
 from seneca_agi.skills import format_skill_invocation
 
-# Shared UI strings
 IMAGE_PLACEHOLDER_NOTE = "*(Image attached in a previous session.)*"
 
 # ─────────────────────────────────────────────────────────────────────────────

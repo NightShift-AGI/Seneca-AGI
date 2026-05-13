@@ -34,6 +34,10 @@ The static marketing site lives in [`website/`](website/). Open
 [`website/index.html`](website/index.html) locally, or deploy the folder with
 any static hosting (GitHub Pages, Netlify, Cloudflare Pages, etc.).
 
+For GitHub Pages, the workflow at `.github/workflows/deploy-pages.yml` publishes
+`website/` on pushes to `main`/`master`—enable **Settings → Pages → Source: GitHub
+Actions** to activate it.
+
 Live site: <https://senega-agi.com>.
 
 For Vercel, this repo includes a `vercel.json` that serves `website/` at the

@@ -26,9 +26,10 @@ class Skill:
     def build_prompt(self, user_input: Optional[str], memory_summary: str) -> str:
         if self.requires_input and not user_input:
             raise ValueError(f"Skill '{self.name}' requires input.")
+        topic = user_input.strip() if user_input else ""
         prompt = self.prompt
         if TOPIC_PLACEHOLDER in prompt:
-            prompt = prompt.format(topic=(user_input or "").strip())
+            prompt = prompt.format(topic=topic)
         prompt = prompt.strip()
         if self.include_memory_summary and memory_summary:
             prompt = f"{prompt}\n\n{memory_summary}".strip()

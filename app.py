@@ -32,7 +32,7 @@ from seneca_agi.multimodal import is_pil_available
 from seneca_agi.philosopher import SenecaPhilosopher
 from seneca_agi.skills import format_skill_invocation
 
-IMAGE_PLACEHOLDER_NOTE = "*(Image attached in a previous session.)*"
+PREVIOUS_SESSION_IMAGE_NOTE = "*(Image attached in a previous session.)*"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Page configuration
@@ -76,7 +76,7 @@ def _hydrate_chat_history(memory: ConversationMemory) -> list[tuple[str, str, Op
             continue
         text = message.content
         if message.has_image:
-            text = f"{text}\n\n{IMAGE_PLACEHOLDER_NOTE}"
+            text = f"{text}\n\n{PREVIOUS_SESSION_IMAGE_NOTE}"
         history.append((message.role, text, None))
     return history
 
@@ -149,7 +149,10 @@ with st.sidebar:
         disabled=not persist_messages,
     )
 
-    if st.button("♻️ Apply & Reload/Reset Session"):
+    apply_label = (
+        "♻️ Apply & Reload Session" if persist_messages else "♻️ Apply & Reset Session"
+    )
+    if st.button(apply_label):
         resolved_memory_path = None
         if persist_messages:
             resolved_memory_path = memory_path.strip() or _default_memory_path()

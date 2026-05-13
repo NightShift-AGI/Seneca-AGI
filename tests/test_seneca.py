@@ -62,7 +62,7 @@ class TestSenecaConfig:
         cfg = SenecaConfig(backend=Backend.GROQ, text_model="llama3.1:8b")
         assert cfg.resolve_text_model() == "llama3-8b-8192"
 
-    def test_resolve_text_model_groq_alias_for_no_suffix(self) -> None:
+    def test_resolve_text_model_groq_default_to_70b(self) -> None:
         cfg = SenecaConfig(backend=Backend.GROQ, text_model="llama3.1")
         assert cfg.resolve_text_model() == cfg.GROQ_TEXT_MODEL
 

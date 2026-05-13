@@ -41,7 +41,7 @@ class SenecaConfig:
     # Text generation model
     text_model: str = field(
         default_factory=lambda: os.getenv(
-            "SENECA_TEXT_MODEL", "llama3.2"
+            "SENECA_TEXT_MODEL", "llama3.1:70b"
         )
     )
     # Vision / multimodal model (image + text)
@@ -102,13 +102,16 @@ class SenecaConfig:
     debug: bool = os.getenv("SENECA_DEBUG", "false").lower() == "true"
 
     # ------------------------------------------- model aliases for Groq free
-    GROQ_TEXT_MODEL: str = "llama3-8b-8192"
+    GROQ_TEXT_MODEL: str = "llama3-70b-8192"
     GROQ_VISION_MODEL: str = "llava-v1.5-7b-4096-preview"
 
     def resolve_text_model(self) -> str:
         """Return the correct text model name for the active backend."""
-        if self.backend == Backend.GROQ and self.text_model == "llama3.2":
-            return self.GROQ_TEXT_MODEL
+        if self.backend == Backend.GROQ and self.text_model.startswith("llama3.1"):
+            if ":8b" in self.text_model:
+                return "llama3-8b-8192"
+            elif ":70b" in self.text_model or self.text_model == "llama3.1":
+                return self.GROQ_TEXT_MODEL
         return self.text_model
 
     def resolve_vision_model(self) -> str:

@@ -6,7 +6,7 @@ Run with:
 
 Environment variables (all optional):
     SENECA_BACKEND        ollama | groq | openai | custom  (default: ollama)
-    SENECA_TEXT_MODEL     LLM model name                   (default: llama3.2)
+    SENECA_TEXT_MODEL     LLM model name                   (default: llama3.1:70b)
     SENECA_VISION_MODEL   Vision model name                (default: llava)
     OLLAMA_BASE_URL       http://localhost:11434           (default)
     GROQ_API_KEY          your Groq API key
@@ -102,7 +102,7 @@ with st.sidebar:
     text_model = st.text_input(
         "Text Model",
         value=st.session_state.config.text_model,
-        help="Ollama: llama3.2, mistral, phi3 · Groq: llama3-8b-8192",
+        help="Ollama: llama3.1:70b, llama3.1:8b, mistral · Groq: llama3-70b-8192",
     )
 
     vision_model = st.text_input(

@@ -36,7 +36,7 @@ pip install -r requirements.txt
 
 ```bash
 # Install Ollama from https://ollama.com
-ollama pull llama3.2        # text model
+ollama pull llama3.1:70b    # text model
 ollama pull llava           # vision model (image analysis)
 ```
 
@@ -58,7 +58,7 @@ inside the app.
 | Variable | Default | Description |
 |---|---|---|
 | `SENECA_BACKEND` | `ollama` | `ollama` · `groq` · `openai` · `custom` |
-| `SENECA_TEXT_MODEL` | `llama3.2` | LLM for text generation |
+| `SENECA_TEXT_MODEL` | `llama3.1:70b` | LLM for text generation |
 | `SENECA_VISION_MODEL` | `llava` | Vision model for image analysis |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama server URL |
 | `GROQ_API_KEY` | *(none)* | Groq free-tier API key |

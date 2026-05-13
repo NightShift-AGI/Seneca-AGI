@@ -146,10 +146,10 @@ with st.sidebar:
         disabled=not persist_messages,
     )
 
-    if st.button("♻️ Apply & Reset Conversation"):
-        memory_path_value = None
+    if st.button("♻️ Apply Settings"):
+        resolved_memory_path = None
         if persist_messages:
-            memory_path_value = memory_path.strip() or _default_memory_path()
+            resolved_memory_path = memory_path.strip() or _default_memory_path()
         new_cfg = SenecaConfig(
             backend=Backend(backend_choice),
             text_model=text_model,
@@ -158,12 +158,17 @@ with st.sidebar:
             temperature=temperature,
             enable_consciousness=consciousness,
             persist_messages=persist_messages,
-            memory_path=memory_path_value,
+            memory_path=resolved_memory_path,
         )
         st.session_state.config = new_cfg
         st.session_state.philosopher = SenecaPhilosopher(config=new_cfg)
-        st.session_state.philosopher.reset()
-        st.session_state.chat_history = []
+        if persist_messages:
+            st.session_state.chat_history = _hydrate_chat_history(
+                st.session_state.philosopher.memory
+            )
+        else:
+            st.session_state.philosopher.reset()
+            st.session_state.chat_history = []
         st.rerun()
 
     st.divider()
@@ -177,6 +182,11 @@ with st.sidebar:
     if st.button("📋 Consciousness Report"):
         report = st.session_state.philosopher.consciousness_report()
         st.info(report)
+
+    if st.button("🧹 Clear Conversation Memory"):
+        st.session_state.philosopher.reset()
+        st.session_state.chat_history = []
+        st.rerun()
 
     st.divider()
     st.subheader("🧰 Skills")

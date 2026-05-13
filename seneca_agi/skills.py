@@ -24,7 +24,7 @@ class Skill:
     def build_prompt(self, user_input: Optional[str], memory_summary: str) -> str:
         if self.requires_input and not user_input:
             raise ValueError(f"Skill '{self.name}' requires input.")
-        prompt = self.prompt.format(input=(user_input or "").strip()).strip()
+        prompt = self.prompt.format(topic=(user_input or "").strip()).strip()
         if self.include_memory_summary and memory_summary:
             prompt = f"{prompt}\n\n{memory_summary}".strip()
         return prompt
@@ -59,7 +59,7 @@ def default_skills() -> List[Skill]:
             description="Ask clarifying Stoic questions about a situation.",
             prompt=(
                 "Ask 3–5 concise Stoic questions that help someone reflect on:"
-                " \"{input}\". Keep each question brief and practical."
+                " \"{topic}\". Keep each question brief and practical."
             ),
             requires_input=True,
         ),
@@ -68,7 +68,7 @@ def default_skills() -> List[Skill]:
             description="Suggest a Stoic exercise for today.",
             prompt=(
                 "Offer a small Stoic exercise for the next 24 hours, grounded in:"
-                " \"{input}\". Make it concrete and doable."
+                " \"{topic}\". Make it concrete and doable."
             ),
             requires_input=True,
         ),

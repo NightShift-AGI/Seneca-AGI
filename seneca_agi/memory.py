@@ -112,6 +112,13 @@ class ConversationMemory:
         if self._persist_messages and self._persistence_path:
             self._save(self._persistence_path)
 
+    def replace_messages(self, messages: List[Message]) -> None:
+        """Replace the in-memory message list in one operation."""
+        self._messages.clear()
+        self._messages.extend(messages)
+        if self._persist_messages and self._persistence_path:
+            self._save(self._persistence_path)
+
     # ----------------------------------------------------------------- wisdom
 
     def add_wisdom(self, text: str, source: str = "reflection") -> None:
@@ -143,6 +150,7 @@ class ConversationMemory:
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         try:
             if path.parent.name == ".seneca_agi":
+                # Ensure restrictive permissions even if the directory pre-existed.
                 path.parent.chmod(0o700)
         except OSError:
             pass

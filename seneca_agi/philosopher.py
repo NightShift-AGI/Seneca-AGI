@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Generator, List, Optional, Union
 
 from seneca_agi.config import Backend, SenecaConfig
-from seneca_agi.memory import ConversationMemory
+from seneca_agi.memory import ConversationMemory, Message
 from seneca_agi.multimodal import build_vision_content, is_pil_available
 from seneca_agi.skills import Skill, SkillRegistry, default_skills, format_skill_invocation
 
@@ -147,10 +147,8 @@ class SenecaPhilosopher:
             self.memory.add_message("system", _SYSTEM_PROMPT)
         elif existing_messages[0].role != "system":
             preserved = [m for m in existing_messages if m.role != "system"]
-            self.memory.clear_messages()
-            self.memory.add_message("system", _SYSTEM_PROMPT)
-            for msg in preserved:
-                self.memory.add_message(msg.role, msg.content, has_image=msg.has_image)
+            system_message = Message(role="system", content=_SYSTEM_PROMPT)
+            self.memory.replace_messages([system_message, *preserved])
 
     # ─────────────────────────────────────────────────────── public interface
 

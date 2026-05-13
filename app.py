@@ -317,4 +317,3 @@ st.markdown(
     "</div>",
     unsafe_allow_html=True,
 )
-# Shared UI strings

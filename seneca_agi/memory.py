@@ -84,10 +84,12 @@ class ConversationMemory:
         self,
         max_messages: int = 20,
         persistence_path: Optional[Path] = None,
+        persist_messages: bool = False,
     ) -> None:
         self._messages: Deque[Message] = deque(maxlen=max_messages)
         self._wisdom: List[WisdomEntry] = []
         self._persistence_path = persistence_path
+        self._persist_messages = persist_messages
         if persistence_path and persistence_path.exists():
             self._load(persistence_path)
 
@@ -95,6 +97,8 @@ class ConversationMemory:
 
     def add_message(self, role: str, content: str, has_image: bool = False) -> None:
         self._messages.append(Message(role=role, content=content, has_image=has_image))
+        if self._persist_messages and self._persistence_path:
+            self._save(self._persistence_path)
 
     def get_messages(self) -> List[Message]:
         return list(self._messages)
@@ -105,6 +109,15 @@ class ConversationMemory:
 
     def clear_messages(self) -> None:
         self._messages.clear()
+        if self._persist_messages and self._persistence_path:
+            self._save(self._persistence_path)
+
+    def replace_messages(self, messages: List[Message]) -> None:
+        """Replace the in-memory message list in one operation."""
+        self._messages.clear()
+        self._messages.extend(messages)
+        if self._persist_messages and self._persistence_path:
+            self._save(self._persistence_path)
 
     # ----------------------------------------------------------------- wisdom
 
@@ -132,12 +145,28 @@ class ConversationMemory:
         data = {
             "wisdom": [w.to_dict() for w in self._wisdom],
         }
+        if self._persist_messages:
+            data["messages"] = [m.to_dict() for m in self._messages]
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        try:
+            # Ensure restrictive permissions even if the directory pre-existed.
+            path.parent.chmod(0o700)
+        except OSError:
+            pass
         path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        try:
+            path.chmod(0o600)
+        except OSError:
+            pass
 
     def _load(self, path: Path) -> None:
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
             self._wisdom = [WisdomEntry.from_dict(d) for d in data.get("wisdom", [])]
+            if self._persist_messages:
+                self._messages.clear()
+                for message in data.get("messages", []):
+                    self._messages.append(Message.from_dict(message))
         except (json.JSONDecodeError, KeyError):
             pass  # Corrupt file — start fresh
 

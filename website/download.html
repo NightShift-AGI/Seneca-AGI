@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Seneca AGI · Download</title>
+    <meta
+      name="description"
+      content="Download Seneca AGI or build local desktop bundles for Windows, macOS, and Linux."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero" id="top">
+      <nav class="nav">
+        <a class="brand" href="index.html">
+          <img src="assets/logo.svg" alt="Seneca AGI logo" />
+          <span>Seneca AGI</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html#features">Features</a>
+          <a href="index.html#experience">Experience</a>
+          <a href="index.html#download">Desktop Bundles</a>
+          <a href="download.html">Download</a>
+          <a href="https://github.com/NightShift-AGI/Seneca-AGI" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+      </nav>
+
+      <div class="hero-content">
+        <div class="hero-text">
+          <p class="eyebrow">Download</p>
+          <h1>Bring Seneca AGI home.</h1>
+          <p class="lead">
+            Choose a release bundle when available, or build the desktop app locally for your operating system.
+          </p>
+          <div class="hero-actions">
+            <a
+              class="btn primary"
+              href="https://github.com/NightShift-AGI/Seneca-AGI/releases"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View releases
+            </a>
+            <a class="btn ghost" href="index.html#experience">Run from source</a>
+          </div>
+          <div class="hero-meta">
+            <span>Local-first · No API key required</span>
+            <span>Windows · macOS · Linux via PyInstaller</span>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="card-header">Release channel</div>
+          <p>
+            Official bundles are published on GitHub. If a release is not yet available, follow the build steps
+            below to create a local bundle.
+          </p>
+          <ul>
+            <li>Signed release archives</li>
+            <li>Release notes with checksums</li>
+            <li>Source build instructions included</li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section" id="options">
+        <h2>Download options</h2>
+        <p class="lead">Pick the path that fits your setup.</p>
+        <div class="grid three">
+          <article class="feature">
+            <h3>GitHub Releases</h3>
+            <p>Grab the latest published bundles or source archives.</p>
+            <div class="hero-actions">
+              <a
+                class="btn ghost"
+                href="https://github.com/NightShift-AGI/Seneca-AGI/releases"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open releases
+              </a>
+            </div>
+          </article>
+          <article class="feature">
+            <h3>Desktop bundle (build)</h3>
+            <p>Install bundling tools and build on the target OS.</p>
+            <p><code>pip install -e ".[bundle]"</code></p>
+            <p><code>python packaging/build.py</code></p>
+          </article>
+          <article class="feature">
+            <h3>Run from source</h3>
+            <p>Launch the Streamlit UI directly from the repo.</p>
+            <p><code>pip install -e .</code></p>
+            <p><code>streamlit run app.py</code></p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section alt">
+        <div class="split">
+          <div>
+            <h2>Need help?</h2>
+            <p>
+              Check the README for setup details, environment variables, and troubleshooting steps for each
+              backend.
+            </p>
+            <div class="hero-actions">
+              <a class="btn ghost" href="https://github.com/NightShift-AGI/Seneca-AGI#readme" target="_blank" rel="noreferrer">
+                View setup guide
+              </a>
+            </div>
+          </div>
+          <div class="callout">
+            <h3>Contribute improvements</h3>
+            <p>
+              If you build a bundle or improve the release process, please share it with the community on GitHub.
+            </p>
+            <a class="btn ghost" href="https://github.com/NightShift-AGI/Seneca-AGI/issues" target="_blank" rel="noreferrer">
+              Open an issue
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <span>Seneca AGI · Free & Open Source</span>
+        <span>“Non est ad astra mollis e terris via.”</span>
+      </div>
+      <a href="#top">Back to top</a>
+    </footer>
+  </body>
+</html>
